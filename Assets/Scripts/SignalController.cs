@@ -4,7 +4,7 @@ using UnityEngine;
 public class SignalController : MonoBehaviour
 {
     [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private float _fadeSpeed;
+    [SerializeField] private float _fadeSpeed = 0.25f;
 
     private float _maxVolume = 1;
     private float _minVolume = 0;
@@ -13,9 +13,7 @@ public class SignalController : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-
         _audioSource.volume = 0;
-        _audioSource.Play();
     }
 
     private void Update()
