@@ -1,20 +1,18 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SignalController))]
+[RequireComponent(typeof(SignalToggler))]
 public class SignalingArea : MonoBehaviour
 {
-    [SerializeField] private SignalController _signalController;
+    [SerializeField] private SignalToggler _signalController;
 
     private void Awake()
     {
-        _signalController = GetComponent<SignalController>();
+        _signalController = GetComponent<SignalToggler>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.GetComponentInParent<Rogue>() != null);
-
-        if(other.GetComponentInParent<Rogue>() != null)
+        if(other.TryGetComponent<Rogue>(out _))
         {
             _signalController.StartSignaling();
         }
@@ -22,7 +20,7 @@ public class SignalingArea : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponentInParent<Rogue>() != null)
+        if (other.TryGetComponent<Rogue>(out _))
         {
             _signalController.StopSignaling();
         }

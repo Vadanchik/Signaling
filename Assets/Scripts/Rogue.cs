@@ -5,7 +5,7 @@ public class Rogue : MonoBehaviour
     [SerializeField] private InputService _inputService;
     [SerializeField] private float _movementSpeed = 3;
 
-    void Update()
+    private void Update()
     {
         Move();
     }
