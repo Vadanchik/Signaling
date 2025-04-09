@@ -923,7 +923,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aab6391f4c71c44fb5e384556fbdf03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _signalController: {fileID: 0}
 --- !u!114 &1499967136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -937,6 +936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _signalSound: {fileID: 0}
+  _signalingArea: {fileID: 1499967135}
   _fadeSpeed: 0.25
 --- !u!82 &1499967137
 AudioSource:
