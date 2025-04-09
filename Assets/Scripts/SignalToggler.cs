@@ -5,11 +5,11 @@ using UnityEngine;
 public class SignalToggler : MonoBehaviour
 {
     [SerializeField] private AudioSource _signalSound;
+    [SerializeField] private SignalingArea _signalingArea;
     [SerializeField] private float _fadeSpeed = 0.25f;
 
     private float _maxVolume = 1;
     private float _minVolume = 0;
-    private float _targetVolume = 0;
 
     private Coroutine _volumeCoroutine;
 
@@ -19,33 +19,49 @@ public class SignalToggler : MonoBehaviour
         _signalSound.volume = 0;
     }
 
+    private void OnEnable()
+    {
+        _signalingArea.OnAreaEntry += StartSignaling;
+        _signalingArea.OnAreaExit += StopSignaling;
+    }
+
+    private void OnDisable()
+    {
+        _signalingArea.OnAreaEntry -= StartSignaling;
+        _signalingArea.OnAreaExit -= StopSignaling;
+    }
+
     public void StartSignaling()
     {
-        _targetVolume = _maxVolume;
-
         if (_volumeCoroutine == null)
         {
             _signalSound.Play();
-            _volumeCoroutine = StartCoroutine(ChangeVolume());
         }
+        else
+        {
+            StopCoroutine(_volumeCoroutine);
+        }
+
+        _volumeCoroutine = StartCoroutine(ChangeVolume(_maxVolume));
     }
 
     public void StopSignaling()
     {
-        _targetVolume = _minVolume;
+        StopCoroutine(_volumeCoroutine);
+        _volumeCoroutine = StartCoroutine(ChangeVolume(_minVolume));
     }
 
-    private IEnumerator ChangeVolume()
+    private IEnumerator ChangeVolume(float targetVolume)
     {
         WaitForEndOfFrame wait = new WaitForEndOfFrame();
 
-        while (Mathf.Abs(_signalSound.volume - _targetVolume) > 0)
+        while (Mathf.Abs(_signalSound.volume - targetVolume) > 0)
         {
-            _signalSound.volume = Mathf.MoveTowards(_signalSound.volume, _targetVolume, _fadeSpeed * Time.deltaTime);
+            _signalSound.volume = Mathf.MoveTowards(_signalSound.volume, targetVolume, _fadeSpeed * Time.deltaTime);
             yield return wait;
         }
 
-        if (_targetVolume == _minVolume)
+        if (targetVolume == _minVolume)
         {
             _volumeCoroutine = null;
             _signalSound.Stop();

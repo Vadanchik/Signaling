@@ -1,20 +1,16 @@
+using System;
 using UnityEngine;
 
-[RequireComponent(typeof(SignalToggler))]
 public class SignalingArea : MonoBehaviour
 {
-    [SerializeField] private SignalToggler _signalController;
-
-    private void Awake()
-    {
-        _signalController = GetComponent<SignalToggler>();
-    }
+    public event Action OnAreaEntry;
+    public event Action OnAreaExit;
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.TryGetComponent<Rogue>(out _))
         {
-            _signalController.StartSignaling();
+            OnAreaEntry?.Invoke();
         }
     }
 
@@ -22,7 +18,7 @@ public class SignalingArea : MonoBehaviour
     {
         if (other.TryGetComponent<Rogue>(out _))
         {
-            _signalController.StopSignaling();
+            OnAreaExit?.Invoke();
         }
     }
 }
